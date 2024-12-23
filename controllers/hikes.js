@@ -1,0 +1,129 @@
+const Hike = require('../models/hike.js');
+const express = require('express');
+const router = express.Router();
+
+
+// CRUD Action: CREATE
+// Method: POST
+// Path: /hikes
+// Response: JSON
+// Success Status Code: 201 Created
+// Success Response Body: A new Hike object
+// Error Status Code: 500 Internal Server Error
+// Error Response Body: A JSON object with an error key and a message describing the error
+
+router.post('/', async (req, res) => {
+    try {
+        const createHike = await Hike.create(req.body);
+        res.status(201).json(createHike);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// CRUD Action: READ
+// Method: GET
+// Path: /hikes
+// Response: JSON
+// Success Status Code: 200 Ok
+// Success Response Body: An array of all the hikes in the database named hikes. The array will be empty if there are no hikes in the database.
+// Error Status Code: 500 Internal Server Error
+// Error Response Body: A JSON object with an error key and a message describing the error.
+
+router.get('/', async (req, res) => {
+    try {
+        const foundHikes = await Hike.find();
+        res.status(200).json(foundHikes);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+
+// CRUD Action: READ
+// Method: GET
+// Path: /hikes/:hikeId
+// Response: JSON
+// Success Status Code: 200 Ok
+// Success Response Body: A JSON object with the hike that matches the hikeId parameter.
+// Error Status Code: 404 Not Found 	  	500 Internal Server Error
+// Error Response Body: A JSON object with an error key and a message describing the error.
+
+router.get('/:hikeId', async (req, res) => {
+    try {
+        const foundHike = await Hike.findById(req.params.hikeId);
+        if (!foundHike) {
+            res.status(404);
+            throw new Error('Hike not found.');
+        }
+        res.status(200).json(foundHike);
+    } catch (error) {
+        if (res.statusCode === 404) {
+            res.json({ error: error.message });
+        } else {
+            res.status(500).json({error: error.message });
+        }
+    }
+});
+
+
+
+// CRUD Action: UPDATE
+// Method: PUT
+// Path: /hikes/:hikeId
+// Response: JSON
+// Success Status Code: 200 Ok
+// Success Response Body: A JSON object with the updated hike.
+// Error Status Code: 404 Not Found 	  	500 Internal Server Error
+// Error Response Body: A JSON object with an error key and a message describing the error.
+
+router.put('/:hikeId', async (req, res) => {
+    try {
+        const updateHike = await Hike.findByIdAndUpdate(req.params.hikeId, req.body, {
+            new: true,
+        });
+        if (!updateHike) {
+            res.status(404);
+            throw new Error ("Hike not found.");
+        }
+        res.status(200).json(updateHike);
+    } catch (error) {
+        if (res.statusCode === 404) {
+            res.json({ error: error.message });
+        } else {
+            res.status(500).json({ error: error.message });
+        }
+    }
+});
+
+
+// CRUD Action: DELETE
+// Method: DELETE
+// Path: /hikes/:hikeId
+// Response: JSON
+// Success Status Code: 200 Ok
+// Success Response Body: A JSON object with the deleted hike.
+// Error Status Code: 404 Note Found 	  	500 Internal Server Error
+// Error Response Body: A JSON object with an error key and a message describing the error.
+
+router.delete('/:hikeId', async (req, res) => {
+    try {
+        const foundHike = await Hike.findByIdAndDelete(req.params.hikeId);
+        if (!foundHike) {
+            res.status(404);
+            throw new Error('Hike not found.');
+        }
+        res.status(200).json(foundHike);
+    } catch (error) {
+        if (res.statusCode === 404) {
+            res.json({ error: error.message });
+        } else {
+            res.status(500).json({ error: error.message });
+        }
+    }
+});
+
+
+
+
+module.exports = router;
