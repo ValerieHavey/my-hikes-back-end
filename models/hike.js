@@ -20,6 +20,10 @@ const hikeSchema = mongoose.Schema({
     notes: {
         type: String,
     },
+    hiker: {
+        type: mongoose.Types.ObjectId,
+        ref: "User"
+    }
 });
 
 const Hike = mongoose.model('Hike', hikeSchema);

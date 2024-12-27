@@ -1,6 +1,7 @@
 const Hike = require('../models/hike.js');
 const express = require('express');
 const router = express.Router();
+const verifyToken = require('../middleware/verify-token.js');
 
 
 // CRUD Action: CREATE
@@ -12,9 +13,13 @@ const router = express.Router();
 // Error Status Code: 500 Internal Server Error
 // Error Response Body: A JSON object with an error key and a message describing the error
 
-router.post('/', async (req, res) => {
+router.post('/', verifyToken, async (req, res) => {
     try {
-        const createHike = await Hike.create(req.body);
+        const hikerId = req.user._id
+        const createHike = await Hike.create({
+            ...req.body,
+            hiker:hikerId
+        });
         res.status(201).json(createHike);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -30,9 +35,12 @@ router.post('/', async (req, res) => {
 // Error Status Code: 500 Internal Server Error
 // Error Response Body: A JSON object with an error key and a message describing the error.
 
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
-        const foundHikes = await Hike.find();
+        const hikerId = req.user._id
+        const foundHikes = await Hike.find({
+            hiker:hikerId
+        });
         res.status(200).json(foundHikes);
     } catch (error) {
         res.status(500).json({ error: error.message });
