@@ -26,6 +26,13 @@ const hikeSchema = mongoose.Schema({
     }
 });
 
+hikeSchema.virtual('gears', {
+    ref: "Gear",
+    localField: '_id',
+    foreignField: 'hike',
+    justOne: false,
+});
+
 const Hike = mongoose.model('Hike', hikeSchema);
 
 module.exports = Hike;

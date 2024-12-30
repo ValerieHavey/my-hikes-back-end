@@ -40,7 +40,7 @@ router.get('/', verifyToken, async (req, res) => {
         const hikerId = req.user._id
         const foundHikes = await Hike.find({
             hiker:hikerId
-        });
+        }).populate('gears').lean();
         res.status(200).json(foundHikes);
     } catch (error) {
         res.status(500).json({ error: error.message });

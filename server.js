@@ -8,6 +8,8 @@ const myHikesJWTRouter = require('./controllers/my-Hikes-JWT.js');
 const usersRouter = require('./controllers/users.js')
 const hikeRouter = require('./controllers/hikes.js');
 const profilesRouter = require('./controllers/profiles.js');
+const gearRouter = require('./controllers/gears.js');
+
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -23,6 +25,7 @@ app.use('/hikes', hikeRouter);
 app.use('/my-hikes-JWT', myHikesJWTRouter);
 app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
+app.use('/gears', gearRouter);
 
 
 app.listen(3000, () => {
