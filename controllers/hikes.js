@@ -2,6 +2,7 @@ const Hike = require('../models/hike.js');
 const express = require('express');
 const router = express.Router();
 const verifyToken = require('../middleware/verify-token.js');
+const Gear = require('../models/gear.js');
 
 
 // CRUD Action: CREATE
@@ -120,7 +121,8 @@ router.delete('/:hikeId', async (req, res) => {
         if (!foundHike) {
             res.status(404);
             throw new Error('Hike not found.');
-        }
+        } 
+        await Gear.deleteMany({hike:req.params.hikeId})
         res.status(200).json(foundHike);
     } catch (error) {
         if (res.statusCode === 404) {
@@ -132,6 +134,17 @@ router.delete('/:hikeId', async (req, res) => {
 });
 
 
-
+router.post('/:hikeId/gears', async (req, res) => {
+    try {
+        const hikeId = req.params.hikeId
+        const addGear = await Gear.create({
+            ...req.body,
+            hike:hikeId
+        });
+        res.status(201).json(addGear);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
 module.exports = router;
