@@ -12,14 +12,13 @@ router.put('/:gearId', async (req, res) => {
     res.json(updatedGear);
 })
 
-router.delete(':/gearId', async (req, res) => {
+router.delete('/:gearId', async (req, res) => {
     try {
         const foundGear = await Gear.findByIdAndDelete(req.params.gearId);
         if (!foundGear) {
             res.status(404);
             throw new Error ('Gear not found.');
         }
-        await Gear.deleteMany({gear:req.params.hikeId})
         res.status(200).json(foundGear);
     } catch (error) {
         if (res.statusCode === 404) {

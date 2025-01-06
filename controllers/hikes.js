@@ -115,17 +115,22 @@ router.put('/:hikeId', async (req, res) => {
 // Error Status Code: 404 Note Found 	  	500 Internal Server Error
 // Error Response Body: A JSON object with an error key and a message describing the error.
 
-router.delete('/:hikeId', async (req, res) => {
+router.delete('/:hikeId', verifyToken, async (req, res) => {
     try {
-        const foundHike = await Hike.findByIdAndDelete(req.params.hikeId);
+        const foundHike = await Hike.findById(req.params.hikeId);
         if (!foundHike) {
             res.status(404);
             throw new Error('Hike not found.');
         } 
+        if (foundHike.hiker !== req.user._id){
+            res.status(403)
+            throw new Error('Hike belongs to another user.');
+        }
+        await Hike.findByIdAndDelete(req.params.hikeId)
         await Gear.deleteMany({hike:req.params.hikeId})
         res.status(200).json(foundHike);
     } catch (error) {
-        if (res.statusCode === 404) {
+        if (res.statusCode === 403 || res.statusCode === 404) {
             res.json({ error: error.message });
         } else {
             res.status(500).json({ error: error.message });
