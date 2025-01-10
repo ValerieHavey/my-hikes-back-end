@@ -24,7 +24,6 @@ app.use(express.static(path.join(__dirname, "my-hikes-front-end/dist")))
 
 // Routes go here
 app.use('/hikes', hikeRouter);
-app.use('/my-hikes-JWT', myHikesJWTRouter);
 app.use('/users', usersRouter);
 app.use('/profiles', profilesRouter);
 app.use('/gears', gearRouter);
