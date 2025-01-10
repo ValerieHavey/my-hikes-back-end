@@ -93,8 +93,7 @@ router.put('/:hikeId', verifyToken, async (req, res) => {
             res.status(404);
             throw new Error('Hike not found.');
         } 
-        console.log(foundHike.hiker, req.user._id);
-        if (foundHike.hiker !== req.user._id){
+        if (foundHike.hiker.toString() !== req.user._id){
             res.status(403)
             throw new Error('Hike belongs to another user.');
         }
@@ -132,7 +131,7 @@ router.delete('/:hikeId', verifyToken, async (req, res) => {
             res.status(404);
             throw new Error('Hike not found.');
         } 
-        if (foundHike.hiker !== req.user._id){
+        if (foundHike.hiker.toString() !== req.user._id){
             res.status(403)
             throw new Error('Hike belongs to another user.');
         }
