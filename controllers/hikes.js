@@ -86,8 +86,17 @@ router.get('/:hikeId', async (req, res) => {
 // Error Status Code: 404 Not Found 	  	500 Internal Server Error
 // Error Response Body: A JSON object with an error key and a message describing the error.
 
-router.put('/:hikeId', async (req, res) => {
+router.put('/:hikeId', verifyToken, async (req, res) => {
     try {
+        const foundHike = await Hike.findById(req.params.hikeId);
+        if (!foundHike) {
+            res.status(404);
+            throw new Error('Hike not found.');
+        } 
+        if (foundHike.hiker !== req.user._id){
+            res.status(403)
+            throw new Error('Hike belongs to another user.');
+        }
         const updateHike = await Hike.findByIdAndUpdate(req.params.hikeId, req.body, {
             new: true,
         });
