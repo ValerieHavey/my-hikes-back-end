@@ -18,7 +18,8 @@ mongoose.connection.on('connected', () => {
 });
 
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors({ origin: process.env.CLIENT_URI }))
+app.use(express.static(path.join(__dirname, "my-hikes-front-end/dist")))
 
 // Routes go here
 app.use('/hikes', hikeRouter);
@@ -28,6 +29,6 @@ app.use('/profiles', profilesRouter);
 app.use('/gears', gearRouter);
 
 
-app.listen(3000, () => {
+app.listen(process.env.PORT || 3000, () => {
   console.log('The express app is ready!');
 });
