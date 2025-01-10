@@ -1,13 +1,15 @@
 const dotenv = require('dotenv');
 dotenv.config();
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 const usersRouter = require('./controllers/users.js')
 const hikeRouter = require('./controllers/hikes.js');
 const profilesRouter = require('./controllers/profiles.js');
 const gearRouter = require('./controllers/gears.js');
+
+const app = express();
 
 
 mongoose.connect(process.env.MONGODB_URI);
