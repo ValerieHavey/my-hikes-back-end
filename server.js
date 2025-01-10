@@ -4,7 +4,6 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const cors = require('cors');
-const myHikesJWTRouter = require('./controllers/my-Hikes-JWT.js');
 const usersRouter = require('./controllers/users.js')
 const hikeRouter = require('./controllers/hikes.js');
 const profilesRouter = require('./controllers/profiles.js');
